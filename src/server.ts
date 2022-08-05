@@ -1,12 +1,18 @@
-import express from 'express';
-import swaggerUI from 'swagger-ui-express';
-import { router } from './routes';
-import swaggerFile from './swagger.json';
+import 'reflect-metadata'
+import express from 'express'
+import swaggerUI from 'swagger-ui-express'
 
-const app = express();
+import { router } from './routes'
+import swaggerFile from './swagger.json'
+import './database'
+import './shared/container'
 
-app.use(express.json());
-app.use('/api-docs',swaggerUI.serve,swaggerUI.setup(swaggerFile));
-app.use(router);
+const app = express()
 
-app.listen(8000);
+app.use(express.json())
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerFile))
+app.use(router)
+
+app.listen(8000, () => {
+    console.log('Server listen on 8000!')
+})
