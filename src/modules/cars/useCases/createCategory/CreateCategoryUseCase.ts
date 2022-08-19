@@ -1,11 +1,11 @@
-import { inject, injectable } from 'tsyringe'
+import { inject, injectable } from 'tsyringe';
 
-import { AppError } from '../../../../shared/errors/AppError'
-import { ICategoriesRepository } from '../../repositories/ICategoriesRepository'
+import { AppError } from '../../../../shared/errors/AppError';
+import { ICategoriesRepository } from '../../infra/repositories/ICategoriesRepository';
 
 interface IRequest {
-    name: string
-    description: string
+    name: string;
+    description: string;
 }
 @injectable()
 class CreateCategoryUseCase {
@@ -13,7 +13,7 @@ class CreateCategoryUseCase {
         @inject('CategoriesRepository')
         private categoriesRepository: ICategoriesRepository
     ) {
-        this.categoriesRepository = categoriesRepository
+        this.categoriesRepository = categoriesRepository;
     }
     async execute({ name, description }: IRequest): Promise<void> {
         const categoryAlreadyExists =

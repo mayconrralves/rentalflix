@@ -7,7 +7,7 @@ import { AppError } from '../../errors/AppError';
 import { router } from './routes';
 import swaggerFile from '../../../swagger.json';
 
-import '../../typeorm';
+import '../typeorm';
 import '../../container';
 
 const app = express();

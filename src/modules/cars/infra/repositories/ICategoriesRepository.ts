@@ -1,4 +1,5 @@
-import { Category } from "../infra/typeorm/entities/Category";
+import { Category } from "../typeorm/entities/Category";
+
 
 
 interface ICreateCategoryDTO {

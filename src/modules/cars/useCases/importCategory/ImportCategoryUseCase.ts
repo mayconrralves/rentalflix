@@ -1,12 +1,12 @@
-import { parse } from 'csv-parse'
+import { parse } from 'csv-parse';
 import fs from 'fs'
-import { inject, injectable } from 'tsyringe'
+import { inject, injectable } from 'tsyringe';
+import { ICategoriesRepository } from '../../infra/repositories/ICategoriesRepository';
 
-import { ICategoriesRepository } from '../../repositories/ICategoriesRepository'
 
 interface IImportCategory {
-    name: string
-    description: string
+    name: string;
+    description: string;
 }
 @injectable()
 class ImportCategoryUseCase {
@@ -17,13 +17,13 @@ class ImportCategoryUseCase {
 
     loadCategories(file: Express.Multer.File): Promise<IImportCategory[]> {
         return new Promise((resolve, reject) => {
-            const stream = fs.createReadStream(file.path)
-            const categories: IImportCategory[] = []
-            const parseFile = parse()
-            stream.pipe(parseFile)
+            const stream = fs.createReadStream(file.path);
+            const categories: IImportCategory[] = [];
+            const parseFile = parse();
+            stream.pipe(parseFile);
             parseFile
                 .on('data', async (line) => {
-                    const [name, description] = line
+                    const [name, description] = line;
                     categories.push({
                         name,
                         description,
@@ -36,7 +36,7 @@ class ImportCategoryUseCase {
                 .on('error', (err) => {
                     reject(err)
                 })
-        })
+        });
     }
     async execute(file: Express.Multer.File): Promise<void> {
         const categories = await this.loadCategories(file)
@@ -44,14 +44,14 @@ class ImportCategoryUseCase {
             const { name, description } = category
             const existsCategory = await this.categoriesRepository.findByName(
                 name
-            )
+            );
             if (!existsCategory) {
                 this.categoriesRepository.create({
                     name,
                     description,
-                })
+                });
             }
-        })
+        });
     }
 }
 
