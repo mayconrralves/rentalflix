@@ -1,4 +1,3 @@
-import { AppError } from "../../../../shared/errors/AppError";
 import { CarsRepositoryInMemory } from "../../infra/repositories/in-memories/CarsRepositoryInMemory";
 import { CreateCarUseCase } from "./CreateCarUseCase";
 
@@ -59,6 +58,6 @@ describe("Create Car", ()=>{
             brand: "brand car",
             category_id: "category",
         });
-        expect(car.avalaible).toBe(true);
+        expect(car.available).toBe(true);
     });
 });
