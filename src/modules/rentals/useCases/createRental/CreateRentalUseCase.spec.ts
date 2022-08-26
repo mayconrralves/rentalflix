@@ -1,18 +1,20 @@
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
+import { DayjsDateProvider } from "../../../../shared/container/provider/DateProvider/implementations/DayjsDateProvider";
+
 import { AppError } from "../../../../shared/errors/AppError";
 import { RentalsRepositoryInMemory } from "../../infra/typeorm/repositories/inMemory/RentalsRepositoryInMemory";
 import { CreateRentalUseCase } from "./CreateRentalUseCase";
 
 let rentalsRepository: RentalsRepositoryInMemory;
 let createRentalUseCase: CreateRentalUseCase;
-dayjs.extend(utc);
+let dateProvider: DayjsDateProvider;
 
 describe("Create Rental", ()=>{
     const dayAdd24Hours = dayjs().add(1, "day").toDate();
     beforeEach(()=>{
         rentalsRepository = new RentalsRepositoryInMemory();
-        createRentalUseCase = new CreateRentalUseCase(rentalsRepository);
+        dateProvider = new DayjsDateProvider();
+        createRentalUseCase = new CreateRentalUseCase(rentalsRepository, dateProvider);
     });
 
     it("should be able to create a new rental",async ()=> {
@@ -72,8 +74,6 @@ describe("Create Rental", ()=>{
       });
    
       it("should not be able to create a new rental with invalid returned time",  async ()=> {
-       
-       
                expect(
                 async () => {
                     await createRentalUseCase.execute(
@@ -84,8 +84,6 @@ describe("Create Rental", ()=>{
                         }
                     );
                 }
-               ).rejects.toBeInstanceOf(AppError);
-
-          
+               ).rejects.toBeInstanceOf(AppError); 
       });
 });
