@@ -1,4 +1,5 @@
 
+import { inject, injectable } from "tsyringe";
 import { IDateProvider } from "../../../../shared/container/provider/DateProvider/IDateProvider";
 import { AppError } from "../../../../shared/errors/AppError";
 import { Rental } from "../../infra/typeorm/entities/Rentals";
@@ -11,9 +12,12 @@ interface IRequest {
     car_id: string;
     expected_return_date: Date;
 }
+@injectable()
 class CreateRentalUseCase {
     constructor(
+        @inject("RentalsRepository")
         private rentalsRepository: IRentalRepository,
+        @inject("DateProvider")
         private dateProvider: IDateProvider,
     ){}
     async execute({user_id, car_id, expected_return_date}:IRequest): Promise<Rental> {
@@ -32,7 +36,6 @@ class CreateRentalUseCase {
         const dateNow = this.dateProvider.dateNow();
 
         const compare = this.dateProvider.compareInHours(dateNow,expected_return_date);
-        console.log('compare', compare);
         if(compare < 24){
             throw new AppError("Invalid return time!");
         }

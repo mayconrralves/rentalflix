@@ -1,5 +1,5 @@
 import { container } from 'tsyringe';
-
+import './provider/DateProvider';
 import { IUsersRepository } from '../../modules/accounts/repositories/IUsersRepository';
 import { CategoriesRepository } from '../../modules/cars/infra/repositories/CategoriesRepository';
 import { SpecificationRepository } from '../../modules/cars/infra/repositories/SpecificationsRepository';
@@ -10,6 +10,7 @@ import { ICarsRepository } from '../../modules/cars/infra/repositories/ICarsRepo
 import { CarsRepository } from '../../modules/cars/infra/repositories/CarsRepository';
 import { ICarImagesRepository } from '../../modules/cars/infra/repositories/ICarImagesRepository';
 import { CarImagesRepository } from '../../modules/cars/infra/repositories/CarImagesRepository';
+import { RentalsRepository } from '../../modules/rentals/infra/typeorm/repositories/RentalsRepository';
 
 container.registerSingleton<ISpecificationsRepository>(
     'SpecificationsRepository',
@@ -33,4 +34,9 @@ container.registerSingleton<ICarsRepository>(
 container.registerSingleton<ICarImagesRepository>(
     "CarImagesRepository",
     CarImagesRepository
-)
+);
+
+container.registerSingleton<RentalsRepository>(
+    "RentalsRepository",
+    RentalsRepository,
+);
