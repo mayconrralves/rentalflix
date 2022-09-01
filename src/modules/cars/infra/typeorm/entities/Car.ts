@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryColumn } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import { FloatTransformer } from '../../../../../utils/NumberTransformer';
 import { Category } from './Category';
 import { Specification } from './Specification';
 
@@ -14,7 +15,13 @@ class Car {
     @Column()
     description: string;
     
-    @Column()
+    @Column({
+        type: "numeric",
+        precision: 2,
+        scale: 2,
+        default: 0.0,
+        transformer: new FloatTransformer()
+    })
     daily_rate: number;
     
     @Column()
@@ -23,7 +30,14 @@ class Car {
     @Column()
     license_plate: string;
     
-    @Column()
+      
+    @Column({
+        type: "numeric",
+        precision: 2,
+        scale: 2,
+        default: 0.0,
+        transformer: new FloatTransformer()
+    })
     fine_amount: number;
     
     @Column()

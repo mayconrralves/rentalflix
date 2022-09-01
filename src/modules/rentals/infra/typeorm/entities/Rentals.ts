@@ -14,10 +14,10 @@ class Rental {
     user_id: string;
     
     @Column()
-    start_date: string;
+    start_date: Date;
     
     @Column()
-    end_date: string;
+    end_date: Date;
     
     @Column()
     expected_return_date: Date;
