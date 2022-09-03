@@ -2,7 +2,7 @@
 import { inject, injectable } from "tsyringe";
 import { IDateProvider } from "../../../../shared/container/provider/DateProvider/IDateProvider";
 import { AppError } from "../../../../shared/errors/AppError";
-import { CarsRepository } from "../../../cars/infra/repositories/CarsRepository";
+import { ICarsRepository } from "../../../cars/infra/repositories/ICarsRepository";
 import { Rental } from "../../infra/typeorm/entities/Rentals";
 import { IRentalRepository } from "../../infra/typeorm/repositories/IRentalRepository";
 
@@ -21,7 +21,7 @@ class CreateRentalUseCase {
         @inject("DateProvider")
         private dateProvider: IDateProvider,
         @inject("CarsRepository")
-        private carsRepository: CarsRepository,
+        private carsRepository: ICarsRepository,
     ){}
     async execute({user_id, car_id, expected_return_date}:IRequest): Promise<Rental> {
         const carUnavailable = await this.rentalsRepository.findOpenRentalByCar(car_id);
