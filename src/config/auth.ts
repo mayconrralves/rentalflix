@@ -1,5 +1,5 @@
 export default {
-    expires_in_token: '15m',
+    expires_in_token: '15d',
     secret_token: 'qualquercoisa',
     secret_refresh_token: 'qualquercoisarefresh',
     expires_in_refresh_token: '30d',
