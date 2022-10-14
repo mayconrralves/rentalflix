@@ -1,30 +1,36 @@
-import { injectable } from "tsyringe";
-import Handlebars from "handlebars";
+import { injectable } from 'tsyringe';
+import Handlebars from 'handlebars';
 import fs from 'fs';
 
 import nodemailer, { Transporter } from 'nodemailer';
-import { IMailProvider } from "../IMailProvider";
-
+import { IMailProvider } from '../IMailProvider';
 
 @injectable()
 class EtherealMailProvider implements IMailProvider {
     private client: Transporter;
-    constructor(){
-        nodemailer.createTestAccount().then(account => {
-            const transporter = nodemailer.createTransport({
-                host: account.smtp.host,
-                port: account.smtp.port,
-                secure: account.smtp.secure,
-                auth: {
-                    user: account.user,
-                    pass: account.pass
-                }
-            });
-            this.client = transporter;
-        }).catch(err=> console.error(err));
+    constructor() {
+        nodemailer
+            .createTestAccount()
+            .then((account) => {
+                const transporter = nodemailer.createTransport({
+                    host: account.smtp.host,
+                    port: account.smtp.port,
+                    secure: account.smtp.secure,
+                    auth: {
+                        user: account.user,
+                        pass: account.pass,
+                    },
+                });
+                this.client = transporter;
+            })
+            .catch((err) => console.error(err));
     }
-    async sendMail(to: string, subject: string, variables: any, path: string): Promise<void> {
-
+    async sendMail(
+        to: string,
+        subject: string,
+        variables: any,
+        path: string
+    ): Promise<void> {
         const templateFileContent = fs.readFileSync(path).toString('utf-8');
 
         const templateParse = Handlebars.compile(templateFileContent);
@@ -33,7 +39,7 @@ class EtherealMailProvider implements IMailProvider {
 
         const message = await this.client.sendMail({
             to,
-            from: "Rentx <noreply@rentx.com>",
+            from: 'Rentx <noreply@rentx.com>',
             subject,
             html: templateHTML,
         });
@@ -42,7 +48,6 @@ class EtherealMailProvider implements IMailProvider {
         // Preview only available when sending through an Ethereal account
         console.log('Preview URL: %s', nodemailer.getTestMessageUrl(message));
     }
-
 }
 
-export { EtherealMailProvider }
+export { EtherealMailProvider };

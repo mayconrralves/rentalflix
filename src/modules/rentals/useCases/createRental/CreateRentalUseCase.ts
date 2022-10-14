@@ -1,12 +1,9 @@
-
-import { inject, injectable } from "tsyringe";
-import { IDateProvider } from "../../../../shared/container/provider/DateProvider/IDateProvider";
-import { AppError } from "../../../../shared/errors/AppError";
-import { ICarsRepository } from "../../../cars/infra/repositories/ICarsRepository";
-import { Rental } from "../../infra/typeorm/entities/Rentals";
-import { IRentalRepository } from "../../infra/typeorm/repositories/IRentalRepository";
-
-
+import { inject, injectable } from 'tsyringe';
+import { IDateProvider } from '../../../../shared/container/provider/DateProvider/IDateProvider';
+import { AppError } from '../../../../shared/errors/AppError';
+import { ICarsRepository } from '../../../cars/infra/repositories/ICarsRepository';
+import { Rental } from '../../infra/typeorm/entities/Rentals';
+import { IRentalRepository } from '../../infra/typeorm/repositories/IRentalRepository';
 
 interface IRequest {
     user_id: string;
@@ -16,31 +13,39 @@ interface IRequest {
 @injectable()
 class CreateRentalUseCase {
     constructor(
-        @inject("RentalsRepository")
+        @inject('RentalsRepository')
         private rentalsRepository: IRentalRepository,
-        @inject("DateProvider")
+        @inject('DateProvider')
         private dateProvider: IDateProvider,
-        @inject("CarsRepository")
-        private carsRepository: ICarsRepository,
-    ){}
-    async execute({user_id, car_id, expected_return_date}:IRequest): Promise<Rental> {
-        const carUnavailable = await this.rentalsRepository.findOpenRentalByCar(car_id);
-        if(carUnavailable){
-            throw new AppError("Car is unavailable");
+        @inject('CarsRepository')
+        private carsRepository: ICarsRepository
+    ) {}
+    async execute({
+        user_id,
+        car_id,
+        expected_return_date,
+    }: IRequest): Promise<Rental> {
+        const carUnavailable = await this.rentalsRepository.findOpenRentalByCar(
+            car_id
+        );
+        if (carUnavailable) {
+            throw new AppError('Car is unavailable');
         }
 
-        const rentalOpenToUser = await this.rentalsRepository.findOpenRentalByUser(
-            user_id
-        );
-        if(rentalOpenToUser) {
+        const rentalOpenToUser =
+            await this.rentalsRepository.findOpenRentalByUser(user_id);
+        if (rentalOpenToUser) {
             throw new AppError("There's a rental in progress for user");
         }
-        
+
         const dateNow = this.dateProvider.dateNow();
 
-        const compare = this.dateProvider.compareInHours(dateNow,expected_return_date);
-        if(compare < 24){
-            throw new AppError("Invalid return time!");
+        const compare = this.dateProvider.compareInHours(
+            dateNow,
+            expected_return_date
+        );
+        if (compare < 24) {
+            throw new AppError('Invalid return time!');
         }
 
         const rental = await this.rentalsRepository.create({
@@ -49,10 +54,10 @@ class CreateRentalUseCase {
             expected_return_date,
         });
 
-        await this.carsRepository.updateAvailable(car_id, false)
-      
+        await this.carsRepository.updateAvailable(car_id, false);
+
         return rental;
     }
 }
 
-export { CreateRentalUseCase  }
+export { CreateRentalUseCase };

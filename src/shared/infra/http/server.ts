@@ -1,6 +1,6 @@
-import { app } from "./app";
+import { app } from './app';
 
 const PORT = 8000;
 app.listen(PORT, () => {
-    console.log(`Server listen on ${PORT}!`)
+    console.log(`Server listen on ${PORT}!`);
 });
