@@ -39,7 +39,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.PORT_KEY }}
+          port: ${{ secrets.SSH_PORT }}
           script: |
             cd ~/app/api-rentx
             yarn
