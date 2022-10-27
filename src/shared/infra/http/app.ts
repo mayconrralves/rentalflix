@@ -10,12 +10,14 @@ import { router } from './routes';
 import swaggerFile from '../../../swagger.json';
 
 import createConnection from '../typeorm';
-import '../../container';
 import upload from '../../../config/upload';
+import rateLimiter from './middlewares/rateLimiter';
+import '../../container';
 
 createConnection();
 const app = express();
 
+app.use(rateLimiter);
 app.use(express.json());
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerFile));
 app.use('/avatar', express.static(`${upload.tmpFolder}/avatar`));
