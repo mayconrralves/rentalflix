@@ -1,9 +1,9 @@
-import { hash } from "bcrypt";
-import { inject, injectable } from "tsyringe";
-import { IDateProvider } from "../../../../shared/container/provider/DateProvider/IDateProvider";
-import { AppError } from "../../../../shared/errors/AppError";
-import { IUsersRepository } from "../../repositories/IUsersRepository";
-import { IUsersTokensRepository } from "../../repositories/IUsersTokensRepository";
+import { hash } from 'bcrypt';
+import { inject, injectable } from 'tsyringe';
+import { IDateProvider } from '../../../../shared/container/provider/DateProvider/IDateProvider';
+import { AppError } from '../../../../shared/errors/AppError';
+import { IUsersRepository } from '../../infra/repositories/IUsersRepository';
+import { IUsersTokensRepository } from '../../infra/repositories/IUsersTokensRepository';
 
 interface IRequest {
     token: string;
@@ -12,25 +12,29 @@ interface IRequest {
 @injectable()
 class ResetPasswordUserUseCase {
     constructor(
-        @inject("UsersTokensRepository")
+        @inject('UsersTokensRepository')
         private usersTokensRepository: IUsersTokensRepository,
-        @inject("DateProvider")
+        @inject('DateProvider')
         private dateProvider: IDateProvider,
-        @inject("UsersRepository")
-        private usersRepository: IUsersRepository,
-    ){}
-    async execute({ token, password}: IRequest): Promise<void>{
-        const userToken = await this.usersTokensRepository.findByRefreshToken(token);
+        @inject('UsersRepository')
+        private usersRepository: IUsersRepository
+    ) {}
+    async execute({ token, password }: IRequest): Promise<void> {
+        const userToken = await this.usersTokensRepository.findByRefreshToken(
+            token
+        );
 
-        if(!userToken) {
-            throw new AppError("Token invalid");
+        if (!userToken) {
+            throw new AppError('Token invalid');
         }
 
-        if(this.dateProvider.compareIfBefore(
-            userToken.expires_date,
-            this.dateProvider.dateNow()
-        )){
-            throw new AppError("Token expired");
+        if (
+            this.dateProvider.compareIfBefore(
+                userToken.expires_date,
+                this.dateProvider.dateNow()
+            )
+        ) {
+            throw new AppError('Token expired');
         }
         const user = await this.usersRepository.findById(userToken.user_id);
 
@@ -39,8 +43,7 @@ class ResetPasswordUserUseCase {
         await this.usersRepository.create(user);
 
         await this.usersTokensRepository.deleteById(userToken.id);
-
     }
 }
 
-export { ResetPasswordUserUseCase }
+export { ResetPasswordUserUseCase };

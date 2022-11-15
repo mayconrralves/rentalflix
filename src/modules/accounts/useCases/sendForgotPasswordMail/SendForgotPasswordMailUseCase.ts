@@ -4,8 +4,8 @@ import { resolve } from 'path';
 import { IDateProvider } from '../../../../shared/container/provider/DateProvider/IDateProvider';
 import { IMailProvider } from '../../../../shared/container/provider/MailProvider/IMailProvider';
 import { AppError } from '../../../../shared/errors/AppError';
-import { IUsersRepository } from '../../repositories/IUsersRepository';
-import { IUsersTokensRepository } from '../../repositories/IUsersTokensRepository';
+import { IUsersRepository } from '../../infra/repositories/IUsersRepository';
+import { IUsersTokensRepository } from '../../infra/repositories/IUsersTokensRepository';
 
 @injectable()
 class SendForgotPasswordMailUseCase {
